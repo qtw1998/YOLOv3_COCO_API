@@ -34,6 +34,13 @@ hyp = {'giou': 1.582,  # giou loss gain
        'scale': 0.1059,  # image scale (+/- gain)
        'shear': 0.5768}  # image shear (+/- deg)
 
+# additional subgradient descent on the sparsity-induced penalty term
+# x_{k+1} = x_{k} - \alpha_{k} * g^{k}
+def updateBN(scale, model):
+    for m in model.modules():
+        if isinstance(m, nn.BatchNorm2d):
+            m.weight.grad.data.add_(scale*torch.sign(m.weight.data))  # L1
+
 
 def train():
     cfg = opt.cfg
@@ -262,6 +269,8 @@ def train():
 
             # Accumulate gradient for x batches before optimizing
             if ni % accumulate == 0:
+                if opt.sparsity != 0:
+                    updateBN(opt.sparsity, model)
                 optimizer.step()
                 optimizer.zero_grad()
 
@@ -361,6 +370,8 @@ if __name__ == '__main__':
     parser.add_argument('--weights', type=str, default='', help='initial weights')  # i.e. weights/darknet.53.conv.74
     parser.add_argument('--arc', type=str, default='default', help='yolo architecture')  # default, uCE, uBCE
     parser.add_argument('--prebias', action='store_true', help='transfer-learn yolo biases prior to training')
+    parser.add_argument('--sparsity', type=float, default=0, help='enable sparsity training with a float value (recommend: 0.0001)')
+
     opt = parser.parse_args()
     opt.weights = 'weights/last.pt' if opt.resume else opt.weights
     print(opt)
