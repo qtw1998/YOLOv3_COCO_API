@@ -1,6 +1,6 @@
 I combined SLIMYOLO here.
 
-You can train sparsity with train-sparsity.py, and use prune.py to pruning.
+You can use train.py to train sparsity with argument "--sparsity 0.0001", and use prune.py to pruning.
 
 
 
