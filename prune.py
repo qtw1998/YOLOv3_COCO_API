@@ -34,7 +34,7 @@ def route_conv(layer_index, module_defs):
     mtype = module_def['type']
     
     before_conv_id = []
-    if mtype in ['convolutional', 'shortcut', 'upsample', 'maxpool']:
+    if mtype in ['convolutional', 'shortcut', 'upsample', 'maxpool', 'reorg3d']:
         if module_defs[layer_index-1]['type'] == 'convolutional':
             return [layer_index-1]
         before_conv_id += route_conv(layer_index-1, module_defs)
@@ -82,6 +82,8 @@ def write_model_cfg(old_path, new_path, new_module_defs):
             lines.append("activation={}\n\n".format(module_def['activation']))   
         elif mtype == 'route':
             lines.append("layers={}\n\n".format(module_def['layers']))               
+        elif mtype == 'reorg3d':
+            lines.append("stride={}\n\n".format(module_def['stride']))
             
         elif mtype == 'upsample':
             lines.append("stride={}\n\n".format(module_def['stride']))
@@ -180,7 +182,7 @@ def test(
 
             print("layer:", mtype)
 
-        elif mtype in ['upsample', 'maxpool']:
+        elif mtype in ['upsample', 'maxpool', 'reorg3d']:
             print("layer:", mtype)
 
         elif mtype == 'route':
