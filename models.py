@@ -196,7 +196,8 @@ class Darknet(nn.Module):
 
     def __init__(self, cfg, img_size=(416, 416), arc='default'):
         super(Darknet, self).__init__()
-
+        print("start initialize Darknet....")
+        print("image size in Darknet:", img_size)
         self.module_defs = parse_model_cfg(cfg)
         self.module_list, self.routs = create_modules(self.module_defs, img_size, arc)
         self.yolo_layers = get_yolo_layers(self)
@@ -204,6 +205,7 @@ class Darknet(nn.Module):
         # Darknet Header https://github.com/AlexeyAB/darknet/issues/2914#issuecomment-496675346
         self.version = np.array([0, 2, 5], dtype=np.int32)  # (int32) version info: major, minor, revision
         self.seen = np.array([0], dtype=np.int64)  # (int64) number of images seen during training
+        print("after intitializing the Darknet....")
 
     def forward(self, x, var=None):
         img_size = x.shape[-2:]

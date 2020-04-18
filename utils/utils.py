@@ -96,9 +96,7 @@ def coco80_to_coco91_class():  # converts 80-index (val2014) to 91-index (paper)
     # a = np.loadtxt('data/coco.names', dtype='str', delimiter='\n')
     # b = np.loadtxt('data/coco_paper.names', dtype='str', delimiter='\n')
     # x = [list(a[i] == b).index(True) + 1 for i in range(80)]  # darknet to coco
-    x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 27, 28, 31, 32, 33, 34,
-         35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63,
-         64, 65, 67, 70, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 86, 87, 88, 89, 90]
+    x = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     return x
 
 
@@ -453,7 +451,7 @@ def non_max_suppression(prediction, conf_thres=0.5, nms_thres=0.5):
         # for c in range(60):
         # shape_likelihood[:, c] =
         #   multivariate_normal.pdf(x, mean=mat['class_mu'][c, :2], cov=mat['class_cov'][c, :2, :2])
-
+        # print(pred.shape)
         # Multiply conf by class conf to get combined confidence
         class_conf, class_pred = pred[:, 5:].max(1)
         pred[:, 4] *= class_conf
@@ -637,7 +635,7 @@ def kmeans_targets(path='../coco/trainvalno5k.txt', n=9, img_size=416):  # from 
     from utils.datasets import LoadImagesAndLabels
     from scipy import cluster
 
-    # Get label wh
+    # Get label wh 等下哥 这里的path我没改？？？？ 没有这个文件夹呀
     dataset = LoadImagesAndLabels(path, augment=True, rect=True)
     for s, l in zip(dataset.shapes, dataset.labels):
         l[:, [1, 3]] *= s[0]  # normalized to pixels
