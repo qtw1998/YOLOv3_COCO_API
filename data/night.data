@@ -1,0 +1,7 @@
+classes = 10
+train = /home/xmy/dataset/bdd100k/train/all.txt
+valid = /cluster/home/qiaotianwei/yolo/nightCOCO/val.names
+labels = /cluster/home/qiaotianwei/yolo/labels.txt
+names = /cluster/home/qiaotianwei/yolo/labels.txt
+backup = backup/bdd100k/
+eval = coco
